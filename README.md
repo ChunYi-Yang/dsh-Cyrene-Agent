@@ -4,14 +4,14 @@
 
 ## 当前交付状态
 
-0.2.1 已在隔离 DSH profile 完成原生插件加载、程序包安装、断网复用、欢迎页面实际渲染及正常退出验证，未调用模型。源码和程序包当前为本地待发布版本；对应 GitHub Release 资产发布前，其他电脑无法完成在线下载。
+0.2.1 已在隔离 DSH profile 完成原生插件加载、程序包安装、断网复用、欢迎页面实际渲染及正常退出验证，未调用模型。源码发布于 master 分支；配套程序包仍待发布到 GitHub Release，资产发布前其他电脑无法完成在线下载。
 
 ## 安装
 
 发布完成后，在 DSH 的“插件 → 添加插件”中输入：
 
 ```text
-github:ChunYi-Yang/dsh-Cyrene-Agent#release/ruwo-suoxie
+github:ChunYi-Yang/dsh-Cyrene-Agent#master
 ```
 
 安装并启用插件，按 DSH 提示重载。点击左栏“如我所书 → 进入翁法罗斯”。首次准备时显示下载百分比和解压状态；失败可再次点击重试。当前支持 Windows x64，首次准备需要联网并预留约 3 GiB 空间。程序包约 527 MiB，不包含本地 AI 推理、向量或语音模型。

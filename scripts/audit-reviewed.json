@@ -12,10 +12,10 @@
     "sha256": "decacc1ba3554aff1d09236b2a994a0eed48072f4df15a3def229b585787e10f"
   },
   {
-    "file": "app.asar/dist/renderer/assets/chat-react-Cp_kD2Ig.js",
+    "file": "app.asar/dist/renderer/assets/chat-react-SkmBXTFh.js",
     "rule": "email",
     "reason": "Retained upstream copyright and feedback contacts; not local account data.",
-    "sha256": "5be74c606b3b0097f03a50291929f949430c45532bfd3621c625ef104e095780"
+    "sha256": "441dceed29f90f2bcf644e5fe04aba0baa3abea1d144c60e3c91ffaa5c8e7164"
   },
   {
     "file": "app.asar/dist/renderer/assets/dist-C_AENMAo.js",

@@ -1,6 +1,6 @@
 {
   "name": "@cyrene/ruwo-suoxie",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "type": "module",
   "main": "./plugins/ruwo-suoxie/index.js",
   "exports": {

@@ -4,7 +4,7 @@
 
 ## 当前交付状态
 
-0.2.0 已在隔离 DSH profile 完成原生插件加载、程序包安装、断网复用、欢迎页面实际渲染及正常退出验证，未调用模型。源码和程序包当前为本地待发布版本；对应 GitHub Release 资产发布前，其他电脑无法完成在线下载。
+0.2.1 已在隔离 DSH profile 完成原生插件加载、程序包安装、断网复用、欢迎页面实际渲染及正常退出验证，未调用模型。源码和程序包当前为本地待发布版本；对应 GitHub Release 资产发布前，其他电脑无法完成在线下载。
 
 ## 安装
 
@@ -31,13 +31,13 @@ pnpm install --ignore-scripts
 npm test
 node scripts/build-tool-schema.mjs <集成源码目录>
 node scripts/build-runtime.mjs <已构建的Cyrene源码目录>
-node scripts/audit.mjs .artifacts/runtime-0.2.0/win-unpacked <已构建的Cyrene源码目录>
+node scripts/audit.mjs .artifacts/runtime-0.2.1/win-unpacked <已构建的Cyrene源码目录>
 node scripts/smoke-runtime.mjs <集成源码目录>
 ```
 
 构建命令只读已有构建结果，输出到被忽略的 .artifacts。发布源码前审查完整待推送提交；上传程序包前还需人工复核二进制资源、许可和元数据。程序包生成后由 runtime-manifest.json 固定版本、下载地址、大小及 SHA-256；不能只替换远端 ZIP 而不更新清单。
 
-将生成的 Cyrene-win32-x64.zip 发布到 runtime-v0.2.0 的 GitHub Release，再发布匹配清单的插件源码。不要把 .artifacts、私人配置、日志、会话或本机安装目录提交到 Git。
+将生成的 Cyrene-win32-x64.zip 发布到 runtime-v0.2.1 的 GitHub Release，再发布匹配清单的插件源码。不要把 .artifacts、私人配置、日志、会话或本机安装目录提交到 Git。
 
 ## 许可与上游
 

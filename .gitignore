@@ -1,0 +1,11 @@
+node_modules/
+.local/
+.env
+.env.*
+*.log
+*.key
+*.pem
+installation.json
+**/installation.json
+.DS_Store
+Thumbs.db

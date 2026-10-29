@@ -1,0 +1,37 @@
+{
+  "name": "@cyrene/ruwo-suoxie",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "files": [
+    "index.js",
+    "control.js",
+    "desktop-window.js",
+    "hide-desktop.ps1",
+    "sessions.js",
+    "model-sync.js",
+    "plugin-management.js",
+    "plugin-settings.js",
+    "profile-settings.js",
+    "schema-bridge.js",
+    "continuation.js",
+    "companion.js",
+    "client.js",
+    "icon.png",
+    "cordis.patch.yml",
+    "README.md",
+    "tray-route.js"
+  ]
+}

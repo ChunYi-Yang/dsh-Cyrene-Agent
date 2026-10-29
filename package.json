@@ -1,0 +1,35 @@
+{
+  "name": "@cyrene/ruwo-suoxie",
+  "version": "0.2.0",
+  "type": "module",
+  "main": "./plugins/ruwo-suoxie/index.js",
+  "exports": {
+    ".": "./plugins/ruwo-suoxie/index.js",
+    "./client": "./plugins/ruwo-suoxie/client.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./plugins/ruwo-suoxie/cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "files": [
+    "plugins/ruwo-suoxie",
+    "runtime",
+    "runtime-manifest.json",
+    "LICENSE",
+    "README.md"
+  ],
+  "private": true,
+  "description": "在 DSH 中安装并启动 Cyrene",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "build:runtime": "node scripts/build-runtime.mjs",
+    "audit": "node scripts/audit.mjs",
+    "smoke:runtime": "node scripts/smoke-runtime.mjs",
+    "build:tool-schema": "node scripts/build-tool-schema.mjs"
+  },
+  "dependencies": {}
+}

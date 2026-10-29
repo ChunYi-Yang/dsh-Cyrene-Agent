@@ -58,16 +58,21 @@ export function createControl(root, dependencies = {}) {
       if (launching) return launching;
       launching = (async () => {
         if (!isAbsolute(root)) throw new Error('请配置本机集成目录');
-        const executable = join(root, 'cyrene/node_modules/electron/dist/electron.exe');
+        const executable = await dependencies.launchExecutable();
         await (dependencies.access ?? access)(executable);
-        const env = { ...process.env, CYRENE_NEXT_ROOT: root, CYRENE_DSH_MANAGED: '1',
+        const env = { ...process.env, CYRENE_NEXT_ROOT: root, CYRENE_DSH_MANAGED: '0',
           CYRENE_USER_DATA: join(root, '.local/cyrene'), DSH_HOME: join(root, '.local/dsh') };
         delete env.ELECTRON_RUN_AS_NODE;
-        const child = launch(executable, [join(root, 'cyrene')], { cwd: join(root, 'cyrene'), env,
+        const child = launch(executable, [], { cwd: root, env,
           detached: true, windowsHide: false, stdio: 'ignore', shell: false });
         await new Promise((resolve, reject) => { child.once('error', reject); child.once('spawn', resolve); });
         child.unref();
-        return { running: false, starting: true };
+        const deadline = Date.now() + 60000;
+        while (Date.now() < deadline) {
+          try { return await call('open'); } catch {}
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        throw new Error('Cyrene 启动超时，请重试。');
       })().finally(() => { launching = undefined; });
       return launching;
     },

@@ -13,6 +13,18 @@ window.__ModuleLoader__.load({
       if (!response.ok || value.error) throw new Error('无法连接如我所书，请打开应用后重试。');
       return value;
     }
+    let preparationChanged = () => {};
+    async function prepare(signal) {
+      let state = await send('prepare', undefined, signal);
+      while (state.phase !== 'ready') {
+        preparationChanged(state);
+        if (state.phase === 'error') throw new Error(state.error || '程序准备失败，请重试。');
+        if (signal?.aborted) throw new DOMException('已取消', 'AbortError');
+        await new Promise(resolve => setTimeout(resolve, 750));
+        state = await send('preparation', undefined, signal);
+      }
+      preparationChanged(state);
+    }
     async function native(method, params, signal) {
       const response = await fetch('/api/ruwo-suoxie/session', { method: 'POST', signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(30000)]) : AbortSignal.timeout(30000),
         headers: { 'Content-Type': 'application/json', 'x-cyrene-control': '1' }, body: JSON.stringify({ method, params }) });
@@ -255,6 +267,7 @@ window.__ModuleLoader__.load({
         if (pendingSwitch) return pendingSwitch;
         const signal = ctx.layout.beginNavigation();
         pendingSwitch = (async () => {
+          await prepare(signal);
           const result = await send(window.dshDesktop?.keyboard ? 'switch' : 'open', undefined, signal);
           if (!result.running) throw new Error('Cyrene 尚未准备好');
         })().finally(() => { pendingSwitch = undefined; });
@@ -265,6 +278,10 @@ window.__ModuleLoader__.load({
         const initialPanel = ctx.layout.panelInfo.getSnapshot().activePanelId;
         const previousPanel = React.useRef(initialPanel === "ruwo-suoxie" ? null : initialPanel);
         const [anchor, setAnchor] = React.useState(null);
+        const [preparation, setPreparation] = React.useState({ phase: 'idle' });
+        React.useEffect(() => { preparationChanged = setPreparation; return () => { preparationChanged = () => {}; }; }, []);
+        const preparingText = preparation.phase === 'downloading' ? `正在下载 Cyrene ${Math.floor(100 * preparation.received / (preparation.total || 1))}%`
+          : preparation.phase === 'extracting' ? '正在解压 Cyrene…' : '正在准备并启动 Cyrene…';
         const [error, setError] = React.useState('');
         const [busy, setBusy] = React.useState(false);
         React.useEffect(() => ctx.layout.panelInfo.subscribe(() => {
@@ -282,7 +299,7 @@ window.__ModuleLoader__.load({
           anchor && createPortal(h(Menu, { open: true, portal: true, autoFocus: true, onClose: () => setAnchor(null),
             getAnchorRect: () => icon.current?.closest('button')?.getBoundingClientRect() ?? null,
             anchor: null },
-            h(MenuItemButton, { disabled: busy, onSelect: () => { setBusy(true); setError(''); void switchToCyrene().then(() => setAnchor(null)).catch(() => setError('打开失败，请重试。')).finally(() => setBusy(false)); } }, busy ? '正在进入翁法罗斯…' : '进入翁法罗斯'),
+            h(MenuItemButton, { disabled: busy, onSelect: () => { setBusy(true); setError(''); void switchToCyrene().then(() => setAnchor(null)).catch(error => setError(preparation.phase === 'error' ? preparation.error : error.message === 'Failed to fetch' ? '网络连接中断，请重试。' : error.message || '打开失败，请重试。')).finally(() => setBusy(false)); } }, busy ? preparingText : '进入翁法罗斯'),
             h(MenuItemButton, { onSelect: () => { setAnchor(null); ctx.layout.selectPanel('ruwo-suoxie-history'); } }, '觐见浮黎'),
             error && h('p', { role: 'alert', style: { padding: 12 } }, error)), document.body));
       }

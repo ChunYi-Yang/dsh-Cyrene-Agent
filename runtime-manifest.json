@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "assets": {
+    "win32-x64": {
+      "url": "https://github.com/ChunYi-Yang/dsh-Cyrene-Agent/releases/download/runtime-v0.2.0/Cyrene-win32-x64.zip",
+      "sha256": "fd9241c3efd6689ebcb1295729823e51b461e76b773c0bcc2a3b940ae16488fe",
+      "bytes": 552142144,
+      "files": {
+        "Cyrene.exe": "db26530ce043b1befc4a1c4a33afc0b6f80636444e3acd4931d4ccdfb6714887",
+        "resources/app.asar": "e8fc78af25cd0f03a55f422f5c5796d4a6857c2ca5fc52ead0e6f993fd12ff4f"
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 /** Forward the official Session API unchanged. No private DB access or event synthesis. */
-export async function sessionResponse(controller, request, companion, continuation, importModels, plugins) {
+export async function sessionResponse(controller, request, companion, continuation, importModels, plugins, team, usage) {
   const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
   if (request.headers.get('x-cyrene-control') !== '1') return json({ error: 'forbidden' }, 403);
   const text = await request.text();
@@ -8,6 +8,17 @@ export async function sessionResponse(controller, request, companion, continuati
   try { body = JSON.parse(text); } catch { return json({ error: 'invalid' }, 400); }
   const { method, params } = body ?? {};
   if (!params || typeof params !== 'object' || Array.isArray(params)) return json({ error: 'invalid' }, 400);
+  if (method === 'usage') {
+    if (!usage) return json({ error: 'usage-unavailable' }, 503);
+    if (!Number.isSafeInteger(params.days) || params.days < 1 || params.days > 366) return json({ error: 'invalid' }, 400);
+    try { return json({ result: await usage(params, request.signal) }); }
+    catch { return json({ error: 'usage-unavailable' }, 503); }
+  }
+  if (method === 'team') {
+    if (!team) return json({ error: 'team-not-configured' }, 503);
+    try { return json({ result: await team.request(params) }); }
+    catch { return json({ error: '团队操作被拒绝，请刷新后检查成员、任务状态与本机配置' }, 409); }
+  }
   if (method === 'plugins') {
     try { return json({ result: await plugins(params) }); }
     catch { return json({ error: 'native-plugin-operation-rejected' }, 409); }
@@ -25,13 +36,14 @@ export async function sessionResponse(controller, request, companion, continuati
     catch { return json({ error: 'companion-configuration-rejected' }, 409); }
   }
   if (method === 'identity') return json({ result: { runtime: 'DeepSeek Harness', service: 'sessionController', plugin: '@cyrene/ruwo-suoxie', protocol: 1, pid: process.pid } });
-  const ordinary = new Set(['modelCatalog', 'list', 'create', 'selectModel', 'rename', 'prompt', 'cancel', 'page', 'attachment']);
+  const ordinary = new Set(['modelCatalog', 'list', 'create', 'fork', 'selectModel', 'rename', 'prompt', 'cancel', 'page', 'attachment']);
   if (!ordinary.has(method) && method !== 'follow') return json({ error: 'unsupported' }, 400);
   // Parameters are passed to the same domain validators as native DSH UI.
   // Additional structural checks prevent malformed objects entering internal APIs.
   const id = value => typeof value === 'string' && value.length > 0 && value.length <= 256;
   const address = value => value?.kind === 'session' && id(value.sessionId);
-  if (['selectModel', 'rename', 'prompt', 'cancel', 'attachment'].includes(method) && !id(params.sessionId)) return json({ error: 'invalid' }, 400);
+  if (['selectModel', 'rename', 'prompt', 'cancel', 'attachment','fork'].includes(method) && !id(params.sessionId)) return json({ error: 'invalid' }, 400);
+  if(method==='fork'&&(params.atSeq!==undefined&&(!Number.isSafeInteger(params.atSeq)||params.atSeq<0)))return json({error:'invalid'},400);
   if (['page', 'follow'].includes(method) && !address(params.address)) return json({ error: 'invalid' }, 400);
   if (method === 'page' && (!Number.isSafeInteger(params.throughSeq) || params.throughSeq < -1
     || (params.beforeSeq !== undefined && (!Number.isSafeInteger(params.beforeSeq) || params.beforeSeq < 0)))) return json({ error: 'invalid' }, 400);

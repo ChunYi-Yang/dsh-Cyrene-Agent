@@ -1,0 +1,32 @@
+[
+  {
+    "file": "app.asar/node_modules/pdfkit/.yarn/releases/yarn-4.16.0.cjs",
+    "rule": "token",
+    "reason": "Bundled Yarn WebAssembly base64 false positive; no credential assignment.",
+    "sha256": "ba05224324578801b9cc98170d64aa50b9a36733b440fb0942306da3fbbdc7d1"
+  },
+  {
+    "file": "app.asar/dist/main/main/orchestrator/tools/email-tools.js",
+    "rule": "email",
+    "reason": "Synthetic example in upstream email-tool instructions.",
+    "sha256": "decacc1ba3554aff1d09236b2a994a0eed48072f4df15a3def229b585787e10f"
+  },
+  {
+    "file": "app.asar/dist/renderer/assets/chat-react-Cp_kD2Ig.js",
+    "rule": "email",
+    "reason": "Retained upstream copyright and feedback contacts; not local account data.",
+    "sha256": "5be74c606b3b0097f03a50291929f949430c45532bfd3621c625ef104e095780"
+  },
+  {
+    "file": "app.asar/dist/renderer/assets/dist-C_AENMAo.js",
+    "rule": "email",
+    "reason": "Bundled programming-language syntax definitions containing at signs.",
+    "sha256": "d3e38fa4454857e42ae1247a5a2aa05a6d539d94f8497706e0f5dc22deeffdab"
+  },
+  {
+    "file": "runtime/LICENSES.chromium.html",
+    "rule": "email",
+    "reason": "Unmodified Chromium third-party license contacts.",
+    "sha256": "e6e6b1f9cb0f32235412be113de7716333e88121f9159a0ea0ff3be652021af7"
+  }
+]
